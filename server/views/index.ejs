@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <!-- CSS Section -->
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/content/style.css">
+    <!-- JavaScript Section -->
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <script src="/popper.js/dist/umd/popper.min.js"></script>
+    <script src="/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/@fortawesome/fontawesome-free/js/all.min.js"></script>
+    <script src="/moment/moment.js"></script>
+    <script src="/autocompleter/autocomplete.js"></script>
+    
+<body>
+    <!-- Main Navigation Section -->
+    <header>
+        <%- include('components/header.ejs'); %>
+    </header>
+
+    <!-- Content Section -->
+    <main>
+        <%- include('content/' + page + '.ejs'); %>
+    </main>
+
+     <!-- Site-wide footer Section -->
+    <footer>
+       <%- include('components/footer.ejs'); %>
+    </footer>
+    
+    
+    <script src="/scripts/app.js"></script>
+</body>
+</html>
