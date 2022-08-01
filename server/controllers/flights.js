@@ -114,7 +114,7 @@ function DisplaySelectPage(req, res, next) {
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
         const ticket = await connection.execute(`
       SELECT * FROM pj_ticket
-      WHERE availability = 'Y' AND class = :class AND flightid = :flightid`, {
+      WHERE availability = 'Y' AND class = :class AND flightid = :flightid AND orderid IS NULL`, {
             flightid: req.params.flightId,
             class: req.params.class
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });

@@ -74,11 +74,11 @@
                         
                 </td>
                 <td class="text-center">
-                    <br><span class="deal">Best Deal</span><br> <%=(results.rows[num].ECON)?"US$ " + results.rows[num].ECON:"Unavailable"%><br><br><a class="btn btn-secondary btn-sm" href="/select/Economy/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a></td>
+                    <br><span class="deal">Best Deal</span><br> <%=(results.rows[num].ECON.toFixed(2))?"US$ " + results.rows[num].ECON:"Unavailable"%><br><br><a class="btn btn-secondary btn-sm" href="/select/Economy/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a></td>
                 <td class="text-center">
-                    <br><span class="deal">Best Deal</span><br><%=(results.rows[num].BUSINESS)?"US$ " + results.rows[num].BUSINESS:"Unavailable"%><br><br><a class="btn btn-primary btn-sm" href="/select/Business/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a></td>
+                    <br><span class="deal">Best Deal</span><br><%=(results.rows[num].BUSINESS.toFixed(2))?"US$ " + results.rows[num].BUSINESS:"Unavailable"%><br><br><a class="btn btn-primary btn-sm" href="/select/Business/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a></td>
                 <td class="text-center">
-                    <br><span class="deal">Best Deal</span><br><%=(results.rows[num].FIRST)?"US$ " + results.rows[num].FIRST:"Unavailable"%><br><br><a class="btn btn-warning btn-sm" href="/select/First/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a></td>
+                    <br><span class="deal">Best Deal</span><br><%=(results.rows[num].FIRST.toFixed(2))?"US$ " + results.rows[num].FIRST:"Unavailable"%><br><br><a class="btn btn-warning btn-sm" href="/select/First/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a></td>
                 </tr>
                 <%}%>
                 

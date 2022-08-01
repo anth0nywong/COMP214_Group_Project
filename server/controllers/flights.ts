@@ -124,7 +124,7 @@ export function DisplaySelectPage(req: express.Request, res: express.Response, n
 
       const ticket:oracledb.Result<any> = await connection.execute(`
       SELECT * FROM pj_ticket
-      WHERE availability = 'Y' AND class = :class AND flightid = :flightid`, 
+      WHERE availability = 'Y' AND class = :class AND flightid = :flightid AND orderid IS NULL`, 
           {
             flightid: req.params.flightId,
             class: req.params.class
