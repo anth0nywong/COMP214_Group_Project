@@ -1,5 +1,5 @@
 import express from 'express';
-import * as DBConfig from '../Config/db';
+import * as DBConfig from '../config/db';
 import oracledb from 'oracledb';
 
 let userId = 10;

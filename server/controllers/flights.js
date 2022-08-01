@@ -29,7 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Checkout = exports.RemoveFromCart = exports.DisplayCheckoutTable = exports.AddToCart = exports.DisplaySelectPage = exports.DisplayFlightsPage = void 0;
 const DBConfig = __importStar(require("../config/db"));
 const oracledb_1 = __importDefault(require("oracledb"));
-oracledb_1.default.initOracleClient({ libDir: 'C:/oracle/instantclient_21_6' });
+C: /oracle/instantclient_21_6;
 let userId = 10;
 function DisplayFlightsPage(req, res, next) {
     let fromLocation = "", toLocation = "";

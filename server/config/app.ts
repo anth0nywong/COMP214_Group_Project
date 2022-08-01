@@ -5,13 +5,13 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import session from 'express-session';
 import cors from 'cors';
-import indexRouter from '../Routes/index'; // top-level routes
-import flightRouter from '../Routes/flights'
+import indexRouter from '../routes/index'; // top-level routes
+import flightRouter from '../routes/flights'
 
 const app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, '../Views'));
+app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 app.locals.moment = require('moment');
 

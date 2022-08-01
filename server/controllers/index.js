@@ -27,7 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DisplayHomePage = void 0;
-const DBConfig = __importStar(require("../Config/db"));
+const DBConfig = __importStar(require("../config/db"));
 const oracledb_1 = __importDefault(require("oracledb"));
 let userId = 10;
 function DisplayHomePage(req, res, next) {
