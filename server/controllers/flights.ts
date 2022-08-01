@@ -1,8 +1,7 @@
 import express from 'express';
 import * as DBConfig from '../config/db';
 import oracledb from 'oracledb';
-// oracledb.initOracleClient({ libDir: '' });
-C:/oracle/instantclient_21_6
+
 let userId = 10;
 
 export function DisplayFlightsPage (req: express.Request, res: express.Response, next: express.NextFunction)
