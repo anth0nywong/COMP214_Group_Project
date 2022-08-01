@@ -6,6 +6,6 @@ exports.RemoteURI = "mongodb+srv://anthony:GAAHRYJU01gGusEX@cluster0.ruhrxoy.mon
 exports.HostName = "MongoDB Atlas";
 exports.Secret = "someSecret";
 exports.user = "admin";
-exports.password = "abc920WWak#!$^";
+exports.password = "123!@#abcABC";
 exports.connectString = "db20220722165842_low";
 //# sourceMappingURL=db.js.map
