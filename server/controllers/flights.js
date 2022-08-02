@@ -264,14 +264,38 @@ function Checkout(req, res, next) {
         else {
             console.log("Succesfully Login Oracle Database with user" + DBConfig.user);
         }
+        const ticket = await connection.execute(`
+        SELECT * FROM pj_customers c ,pj_orders o, pj_ticket t, pj_flight f
+        WHERE c.id_user = o.id_user AND o.id_booking = t.orderid AND t.flightid = f.id_flight AND c.id_user = :userNum AND o.completed = 'N'
+        `, {
+            userNum: userId
+        }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
         await connection.execute(`
         BEGIN
         checkout_sp(:userNum);
         END;`, {
             userNum: userId,
         });
+        const user = await connection.execute(`
+          SELECT * FROM PJ_CUSTOMERS WHERE id_user = :userNum`, {
+            userNum: userId,
+        }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
+        const basket = await connection.execute(`
+          SELECT COUNT(t.id_ticket) COUNT FROM pj_customers c ,pj_orders o, pj_ticket t
+            WHERE c.id_user = o.id_user AND o.id_booking = t.orderid AND c.id_user = :userNum AND o.completed = 'N'`, {
+            userNum: userId,
+        }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
+        if (basket.rows && basket.rows[0].COUNT == 0) {
+            await connection.execute(`
+        BEGIN
+        create_empty_basket_sp(:userNum);
+        END;
+        `, {
+                userNum: userId,
+            });
+        }
         await connection.close();
-        res.redirect('/home');
+        res.render('index', { title: 'Check Out', page: 'complete_order', ticket: ticket, basket: basket, user: user });
     });
 }
 exports.Checkout = Checkout;

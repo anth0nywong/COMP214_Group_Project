@@ -1,0 +1,53 @@
+<div class="container">
+    <%  let total = 0;
+                for(let i = 0; i < ticket.rows.length; i++) { 
+                    total += ticket.rows[i].PRICE;
+                    %>
+                    <div class="card col-12">
+                        <h5 class="card-header"><%= ticket.rows[i].AIRLINE %> <%= ticket.rows[i].FLIGHTID %></h5>
+                        
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    Seat: <%= ticket.rows[i].POSITION %>
+                                </div>
+                                <div class="col-6 text-end">
+                                    Ticket ID: <%=ticket.rows[i].ID_TICKET%>
+                                </div>    
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <%=moment(ticket.rows[i].TAKE_OFF_TIME).format("YYYY-MM-DD")%>
+                                </div>
+                                <div class="col-6 justify-content-end text-end">
+                                    <%=moment(ticket.rows[i].ARRIVAL_TIME).format("YYYY-MM-DD")%>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <%=moment(ticket.rows[i].TAKE_OFF_TIME).format("H:mm")%>
+                                </div>
+                                <div class="col-6 justify-content-end text-end"> 
+                                    <%=moment(ticket.rows[i].ARRIVAL_TIME).format("H:mm")%>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                    <div class="col-2 text-center">
+                                        <i class="fa-solid fa-plane"></i>
+                                    </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                    <div class="col-6 text-center">
+                                        From <%=ticket.rows[i].FROM_AIRPORT%> To <%=ticket.rows[i].TO_AIRPORT%> 
+                                    </div>
+                            </div>
+                            <div class="row justify-content-end">
+                                    <div class="col-6 text-center">
+                                        <%=ticket.rows[i].PRICE.toFixed(2) %>
+                                    </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                <% } %>
+    </div>

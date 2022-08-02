@@ -55,7 +55,7 @@
                     </div>
                 </td>
                 <td class="text-center">
-                    <%= ticket.rows[i].PRICE.toFixed(2)%>
+                    $<%= ticket.rows[i].PRICE.toFixed(2)%>
                 </td>
                 <td class="text-center">
                     <br><br>
@@ -71,7 +71,8 @@
             <tr>
                 <td></td>
                 <td class="text-center">$<%=total.toFixed(2)%></td>
-                <td class="text-center"><a class="btn btn-success" href="/confirm"><i class="fa-solid fa-plane-departure"></i></td>
+                <% if (ticket.rows.length > 0) { %>
+                <td class="text-center"><a class="btn btn-success" href="/confirm"><i class="fa-solid fa-plane-departure"></i></td> <% } %>
             </tr>
     </tbody>
 </table>

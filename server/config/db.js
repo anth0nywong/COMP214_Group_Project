@@ -5,7 +5,7 @@ exports.LocalURI = "mongodb://127.0.0.1/survey";
 exports.RemoteURI = "mongodb+srv://anthony:GAAHRYJU01gGusEX@cluster0.ruhrxoy.mongodb.net/?retryWrites=true&w=majority";
 exports.HostName = "MongoDB Atlas";
 exports.Secret = "someSecret";
-exports.user = "admin";
-exports.password = "123!@#abcABC";
-exports.connectString = "db20220722165842_low";
+exports.user = "HEI";
+exports.password = "ab92WWak";
+exports.connectString = "localhost:1521/xe";
 //# sourceMappingURL=db.js.map
