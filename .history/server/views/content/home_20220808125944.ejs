@@ -1,0 +1,30 @@
+<div class="container">
+       <div class="container-fluid ml-5 shadow p-3 mb-5 bg-white rounded">
+        <br>
+        <div class="row">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <div class="nav-link text-dark active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Flights</div>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <div class="nav-link text-dark" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">My Booking</div>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <div class="nav-link text-dark" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Flight Status</div>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <%- include('nav/flights.ejs'); %>
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <%- include('nav/mybooking.ejs'); %>
+                </div>
+                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                    <%- include('nav/flightstatus.ejs'); %>
+                </div>
+              </div>
+        </div>
+        
+    </div>
+</div>

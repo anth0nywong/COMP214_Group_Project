@@ -1,0 +1,67 @@
+<%if(results.rows.length > 0) { %> 
+<div class="container">
+<div class="card col-12">
+    <h5 class="card-header">
+        <div class="row">
+            <div class="col-6">
+                <%=moment(results.rows[0].TAKE_OFF_TIME).format("MMMM Do YYYY, H:mm")%>
+            </div>
+            <div class="col-6 justify-content-end text-end"> 
+                <%=moment(results.rows[0].ARRIVAL_TIME).format("MMMM Do YYYY, H:mm")%>
+            </div>
+        </div>
+    </h5>
+    
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-6">
+                
+                From <%=results.rows[0].FROM_AIRPORT%> To <%=results.rows[0].TO_AIRPORT%> 
+            </div>
+            <div class="col-6 justify-content-end text-end"> 
+                
+                <%=results.rows[0].AIRLINE%> <%=results.rows[0].ID_FLIGHT%>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-2 text-center">
+                <i class="fa-solid fa-plane"></i>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 text-center">
+            Duration: <%= Math.floor((results.rows[0].ARRIVAL_TIME - results.rows[0].TAKE_OFF_TIME) / 3600 /1000 )%> : <%= ((results.rows[0].ARRIVAL_TIME - results.rows[0].TAKE_OFF_TIME) /1000 /60 % 60 * 60) < 10?"0":"" %><%= ((results.rows[0].ARRIVAL_TIME - results.rows[0].TAKE_OFF_TIME) /1000 /60 % 60 * 60) %>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                Model <%=results.rows[0].MODEL%>
+            </div>
+            <div class="col-6 justify-content-end text-end"> 
+                Status: <%=  (results.rows[0].ARRIVAL_TIME<new Date())?"Arrived":(results.rows[0].TAKE_OFF_TIME<new Date())?"Departed":"Scheduled" %>
+            </div>
+        </div>
+    </div>    
+</div>
+<br>
+<div class="row">
+    <div class="col-12 justify-content-end text-start"> 
+        <a href="/home" class="btn btn-primary btn-sm" id="button">Return</a>
+    </div>
+</div>
+</div>
+<% } else {%>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 justify-content-end text-start"> 
+            No Result Found.
+            </div>
+            <br><br><br>
+            <div class="col-12 justify-content-end text-start"> 
+                <a href="/home" class="btn btn-primary btn-sm" id="button">Return</a>
+            </div>
+        </div>
+    </div>
+<% } %>
+

@@ -12,5 +12,7 @@ router.get('/book/:ticketId', flights_1.AddToCart);
 router.get('/checkout', flights_1.DisplayCheckoutTable);
 router.get('/cancel/:ticketId', flights_1.RemoveFromCart);
 router.get('/confirm', flights_1.Checkout);
+router.post('/myBooking', flights_1.CheckBooking);
+router.post('/checkFlight', flights_1.CheckFlight);
 exports.default = router;
 //# sourceMappingURL=flights.js.map

@@ -5,7 +5,7 @@
             <ul class="list-group list-group-horizontal justify-content-center">
                 <% for (let num = 0; num < 7; num++){ %>
                     <li class="list-group-item px-5" id="date-item-<%=num + 1%>">
-                        <%= moment(Date.parse(date) +(num - 4) * 86400000).format("MMM Do YY")%>
+                        <%= moment(Date.parse(date) +(num - 2) * 86400000).format("MMM Do YY")%>
                     </li>
                 <%}%>
             </ul>
@@ -70,15 +70,23 @@
                                 <div class="col-6 justify-content-end text-end"> 
                                 </div>
                             </div>
-                        </div>
-                        
+                        </div>    
                 </td>
                 <td class="text-center">
-                    <br><span class="deal">Best Deal</span><br> <%=(results.rows[num].ECON)?"US$ " + results.rows[num].ECON.toFixed(2):"Unavailable"%><br><br><a class="btn btn-secondary btn-sm" href="/select/Economy/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a></td>
+                    <br><span class="deal">Best Deal</span><br> <%=(results.rows[num].ECON)?"US$ " + results.rows[num].ECON.toFixed(2):"Unavailable"%><br><br>
+                    <span> <%=results.rows[num].availabileEcon%> Seats Available</span><br><br>
+                    <a class="btn btn-secondary btn-sm" href="/select/Economy/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a>
+                </td>
                 <td class="text-center">
-                    <br><span class="deal">Best Deal</span><br><%=(results.rows[num].BUSINESS)?"US$ " + results.rows[num].BUSINESS.toFixed(2):"Unavailable"%><br><br><a class="btn btn-primary btn-sm" href="/select/Business/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a></td>
+                    <br><span class="deal">Best Deal</span><br><%=(results.rows[num].BUSINESS)?"US$ " + results.rows[num].BUSINESS.toFixed(2):"Unavailable"%><br><br>
+                    <span> <%=results.rows[num].availabileBusiness%> Seats Available</span><br><br>
+                    <a class="btn btn-primary btn-sm" href="/select/Business/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a>
+                </td>
                 <td class="text-center">
-                    <br><span class="deal">Best Deal</span><br><%=(results.rows[num].FIRST)?"US$ " + results.rows[num].FIRST.toFixed(2):"Unavailable"%><br><br><a class="btn btn-warning btn-sm" href="/select/First/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a></td>
+                    <br><span class="deal">Best Deal</span><br><%=(results.rows[num].FIRST)?"US$ " + results.rows[num].FIRST.toFixed(2):"Unavailable"%><br><br>
+                    <span> <%=results.rows[num].availabileFirst%> Seats Available</span><br><br>
+                    <a class="btn btn-warning btn-sm" href="/select/First/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a>
+                </td>
                 </tr>
                 <%}%>
                 
@@ -88,12 +96,17 @@
         else { %>
             <tbody>
             <tr>
-            <td class="text-center">No result is found.</td>
+            <td class="text-center">No result is found.
+                <div class="col-12 justify-content-end text-center"> <br><br>
+                <a href="/home" class="btn btn-primary btn-sm" id="button">Return</a>
+            </div></td>
             <td></td>
             <td></td>
             <td></td>
             </tr>
             </tbody>
+            <br><br><br>
+            
             
             <%}%>
     </div>

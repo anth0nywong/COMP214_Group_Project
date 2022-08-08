@@ -1,0 +1,31 @@
+<div class="container">
+    <h4>Buy your tickets: </h4>
+    <hr>
+    <form id="flightSeach" action="/flights" class="row bootstrapForm" method="post">
+    <div class="row">
+      <div class="col-12 col-lg-10">
+        <div class ="row">
+          <div class="col-12 col-md-5 ">
+            <label for="cars">Flight ID:</label>
+            <select name="airline" id="airline">
+                <option value="volvo">AC</option>
+                <option value="saab">Saab</option>
+                <option value="mercedes">Mercedes</option>
+                <option value="audi">Audi</option>
+              </select>
+              <input id="from" type="text" name="from" value="" maxlength="4" size="4">
+            
+          </div>
+            
+          
+        </div>
+       
+    </div>
+    <div class="col-12 col-lg-2 align-self-end">
+      <button id="updateButton" type="submit" class="btn btn-primary btn-block"><i class="fa-solid fa-plane-departure"></i> Flights</button>
+    </div>
+    </div>
+    </form>
+  </div>
+  <script src="/scripts/auto_complete.js"></script>
+   

@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Checkout = exports.RemoveFromCart = exports.DisplayCheckoutTable = exports.AddToCart = exports.DisplaySelectPage = exports.DisplayFlightsPage = void 0;
+exports.CheckFlight = exports.CheckBooking = exports.Checkout = exports.RemoveFromCart = exports.DisplayCheckoutTable = exports.AddToCart = exports.DisplaySelectPage = exports.DisplayFlightsPage = void 0;
 const DBConfig = __importStar(require("../config/db"));
 const oracledb_1 = __importDefault(require("oracledb"));
 let userId = 10;
@@ -85,13 +85,43 @@ function DisplayFlightsPage(req, res, next) {
                     business: { dir: oracledb_1.default.BIND_OUT, type: oracledb_1.default.NUMBER },
                     first: { dir: oracledb_1.default.BIND_OUT, type: oracledb_1.default.NUMBER }
                 });
+                const econ = await connection.execute(`
+              SELECT COUNT(s.id_ticket) NUM FROM TABLE (check_seat(:flightid)) s , pj_ticket p where s.id_ticket = p.id_ticket AND p.class = 'Economy'`, {
+                    flightid: result.rows[i].ID_FLIGHT
+                }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
+                const business = await connection.execute(`
+              SELECT COUNT(s.id_ticket) NUM FROM TABLE (check_seat(:flightid)) s , pj_ticket p where s.id_ticket = p.id_ticket AND p.class = 'Business'`, {
+                    flightid: result.rows[i].ID_FLIGHT
+                }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
+                const first = await connection.execute(`
+              SELECT COUNT(s.id_ticket) NUM FROM TABLE (check_seat(:flightid)) s , pj_ticket p where s.id_ticket = p.id_ticket AND p.class = 'First'`, {
+                    flightid: result.rows[i].ID_FLIGHT
+                }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
+                if (econ.rows) {
+                    result.rows[i].availabileEcon = econ.rows[0].NUM;
+                }
+                else {
+                    result.rows[i].availabileEcon = 0;
+                }
+                if (business.rows) {
+                    result.rows[i].availabileBusiness = business.rows[0].NUM;
+                }
+                else {
+                    result.rows[i].availabileBusiness = 0;
+                }
+                if (first.rows) {
+                    result.rows[i].availabileFirst = first.rows[0].NUM;
+                }
+                else {
+                    result.rows[i].availabileFirst = 0;
+                }
                 result.rows[i].ECON = minPrice.outBinds.econ;
                 result.rows[i].BUSINESS = minPrice.outBinds.business;
                 result.rows[i].FIRST = minPrice.outBinds.first;
             }
-            res.render('index', { title: 'Search', page: 'flight-search', results: result, date: req.body.date, basket: basket, user: user });
-            await connection.close();
         }
+        res.render('index', { title: 'Search', page: 'flight-search', results: result, date: req.body.date, basket: basket, user: user });
+        await connection.close();
     });
 }
 exports.DisplayFlightsPage = DisplayFlightsPage;
@@ -122,7 +152,6 @@ function DisplaySelectPage(req, res, next) {
           SELECT * FROM PJ_CUSTOMERS WHERE id_user = :userNum`, {
             userNum: userId,
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
-        console.log(ticket);
         const basket = await connection.execute(`
           SELECT COUNT(t.id_ticket) COUNT FROM pj_customers c ,pj_orders o, pj_ticket t
             WHERE c.id_user = o.id_user AND o.id_booking = t.orderid AND c.id_user = :userNum AND o.completed = 'N'`, {
@@ -299,4 +328,92 @@ function Checkout(req, res, next) {
     });
 }
 exports.Checkout = Checkout;
+function CheckBooking(req, res, next) {
+    oracledb_1.default.getConnection({
+        user: DBConfig.user,
+        password: DBConfig.password,
+        connectString: DBConfig.connectString
+    }, async (err, connection) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log("Succesfully Login Oracle Database with user" + DBConfig.user);
+        }
+        const ticket = await connection.execute(`
+        SELECT o.id_booking, t.price, t.id_ticket, t.position, f.airline, t.flightid, f.take_off_time, f.arrival_time, f.from_airport, f.to_airport 
+        FROM pj_orders o, pj_ticket t, pj_customers c, pj_flight f
+        where o.id_booking = t.orderid
+        AND t.flightid = f.id_flight
+        AND o.id_user = c.id_user 
+        AND LOWER(c.last_name)  = :lastName AND o.id_booking = :idBooking
+        `, {
+            lastName: req.body.lastName.toLowerCase(),
+            idBooking: req.body.idBooking
+        }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
+        const user = await connection.execute(`
+          SELECT * FROM PJ_CUSTOMERS WHERE id_user = :userNum`, {
+            userNum: userId,
+        }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
+        const basket = await connection.execute(`
+          SELECT COUNT(t.id_ticket) COUNT FROM pj_customers c ,pj_orders o, pj_ticket t
+            WHERE c.id_user = o.id_user AND o.id_booking = t.orderid AND c.id_user = :userNum AND o.completed = 'N'`, {
+            userNum: userId,
+        }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
+        if (basket.rows && basket.rows[0].COUNT == 0) {
+            await connection.execute(`
+        BEGIN
+        create_empty_basket_sp(:userNum);
+        END;
+        `, {
+                userNum: userId,
+            });
+        }
+        await connection.close();
+        res.render('index', { title: 'Check Out', page: 'booking', ticket: ticket, basket: basket, user: user });
+    });
+}
+exports.CheckBooking = CheckBooking;
+function CheckFlight(req, res, next) {
+    oracledb_1.default.getConnection({
+        user: DBConfig.user,
+        password: DBConfig.password,
+        connectString: DBConfig.connectString
+    }, async (err, connection) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log("Succesfully Login Oracle Database with user" + DBConfig.user);
+        }
+        console.log(req.body.airline);
+        const result = await connection.execute(`
+          SELECT * FROM pj_flight where id_flight = :flightid AND airline = :airline`, {
+            flightid: req.body.flightid,
+            airline: req.body.airline
+        }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
+        console.log(result);
+        const user = await connection.execute(`
+          SELECT * FROM PJ_CUSTOMERS WHERE id_user = :userNum`, {
+            userNum: userId,
+        }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
+        const basket = await connection.execute(`
+          SELECT COUNT(t.id_ticket) COUNT FROM pj_customers c ,pj_orders o, pj_ticket t
+            WHERE c.id_user = o.id_user AND o.id_booking = t.orderid AND c.id_user = :userNum AND o.completed = 'N'`, {
+            userNum: userId,
+        }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
+        if (basket.rows && basket.rows[0].COUNT == 0) {
+            await connection.execute(`
+              BEGIN
+              create_empty_basket_sp(:userNum);
+              END;
+              `, {
+                userNum: userId,
+            });
+        }
+        res.render('index', { title: 'Search', page: 'flight-info', results: result, basket: basket, user: user });
+        await connection.close();
+    });
+}
+exports.CheckFlight = CheckFlight;
 //# sourceMappingURL=flights.js.map

@@ -1,0 +1,39 @@
+<div class="container">
+    <h4>Buy your tickets: </h4>
+    <hr>
+    <form id="flightSeach" action="/flights" class="row bootstrapForm" method="post">
+    <div class="row">
+      <div class="col-12 col-lg-10">
+        <div class ="row">
+          <div class="col-12 col-md-5 ">
+            <div class="row">
+              Airline<input id="from" type="text" name="from" value="" size="2">
+            </div>
+          </div>
+          <div class="col-12 col-md-2 col-lg-1 text-center align-self-center">
+            <div id="switch" type="button btn-sm text-center" class="btn">
+              <i  class="fa-solid fa-arrow-right-arrow-left fa-sm"></i>
+            </div>
+          </div>
+          <div class="col-12 col-md-5">
+            <div class="row">
+              to<input  id="to" type="text" name="to" value="">
+            </div>
+          </div>
+        </div>
+        <div class ="row">
+          <div class="col-12 col-md-11 ">
+            <div class="row">
+              Date<input type="date" class="form-control" id="date" required name="date">
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-2 align-self-end">
+      <button id="updateButton" type="submit" class="btn btn-primary btn-block"><i class="fa-solid fa-plane-departure"></i> Flights</button>
+    </div>
+    </div>
+    </form>
+  </div>
+  <script src="/scripts/auto_complete.js"></script>
+   

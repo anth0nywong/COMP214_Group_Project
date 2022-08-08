@@ -1,0 +1,27 @@
+<% if(ticket) { %> 
+<div class="container">
+    <h1>Your Booking</h1>
+    <div class="row">
+        <div class="col-6">
+        </div>
+        <div class="col-6 justify-content-end text-end"> 
+            <button class="btn btn-primary" id="button">Download PDF</button>
+        </div>
+    </div>
+</div>
+<br>
+<%- include('order_info.ejs'); %>
+    <script>
+        var button = document.getElementById("button");
+        var makepdf = document.getElementById("makepdf");
+  
+        button.addEventListener("click", function () {
+            console.log("hel");
+            html2pdf(makepdf);
+    });
+</script>
+<% } else {%>
+    <div class="container">
+        No Result Found.
+    </div>
+<% } %>
