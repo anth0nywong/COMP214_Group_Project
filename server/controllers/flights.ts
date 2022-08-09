@@ -2,20 +2,23 @@ import express from 'express';
 import * as DBConfig from '../config/db';
 import oracledb from 'oracledb';
 
-//oracledb.initOracleClient({ libDir: 'C:/oracle/instantclient_21_6' }); <-- uncomment this line if using window
+oracledb.initOracleClient({ libDir: 'C:/oracle/instantclient_21_6' }); //<-- uncomment this line if using window
 let userId = 10;
 
-export function DisplayFlightsPage (req: express.Request, res: express.Response, next: express.NextFunction)
+export function DisplayFlightsPage(req: express.Request, res: express.Response, next: express.NextFunction)
 {
+  console.log()
     let fromLocation : string = "", toLocation : string = "";
     if(req.body.from.includes("(") && req.body.from.includes(")"))
     {
         fromLocation = req.body.from.split("(")[1].split(")")[0];
     }
+    else fromLocation = req.body.from;
     if(req.body.to.includes("(") && req.body.to.includes(")"))
     {
         toLocation = req.body.to.split("(")[1].split(")")[0];
     }
+    else toLocation = req.body.to;
 
     oracledb.getConnection(
         {
@@ -31,7 +34,6 @@ export function DisplayFlightsPage (req: express.Request, res: express.Response,
           else
           {
             console.log("Succesfully Login Oracle Database with user" +  DBConfig.user);
-            
           }
           // select airport information
           const result:oracledb.Result<any> = await connection.execute(`
@@ -132,7 +134,8 @@ export function DisplayFlightsPage (req: express.Request, res: express.Response,
               result.rows[i].FIRST = minPrice.outBinds.first;
             }
           }
-            res.render('index', {title: 'Search', page: 'flight-search', results: result, date: req.body.date, basket: basket, user: user });
+          console.log(result);
+            res.render('index', {title: 'Search', page: 'flight-search', results: result, date: req.body.date, basket: basket, user: user, fromLocation: fromLocation, toLocation:toLocation });
           await connection.close();
         
       }
@@ -288,7 +291,7 @@ export function DisplayCheckoutTable(req: express.Request, res: express.Response
               });
             }
       const ticket:oracledb.Result<any> = await connection.execute(`
-      SELECT * FROM pj_customers c ,pj_orders o, pj_ticket t, pj_flight f
+      SELECT cal_tax(o.id_booking) tax_rate, f.airline, t.position,t.id_ticket, f.take_off_time, f.arrival_time, f.from_airport, f.to_airport, t.price FROM pj_customers c ,pj_orders o, pj_ticket t, pj_flight f
       WHERE c.id_user = o.id_user AND o.id_booking = t.orderid AND t.flightid = f.id_flight AND c.id_user = :userNum AND o.completed = 'N'
       `,
       {
@@ -403,17 +406,6 @@ export function Checkout(req: express.Request, res: express.Response, next: expr
             },
             { outFormat: oracledb.OUT_FORMAT_OBJECT });
             // Create basket if no basket found
-      if(basket.rows && basket.rows[0].COUNT == 0)
-      {
-        await connection.execute(`
-        BEGIN
-        create_empty_basket_sp(:userNum);
-        END;
-        `,
-        {
-          userNum: userId,
-        });
-      }
             
       await connection.close();
       res.render('index', {title: 'Check Out', page: 'complete_order', ticket: ticket, basket: basket, user: user });

@@ -1,12 +1,18 @@
-<div class="container">
+<div class="container table-responsive">
     <h1>Flights</h1> 
     <div class="row justify-content-md-center my-5">
         <div class="col-12">
             <ul class="list-group list-group-horizontal justify-content-center">
                 <% for (let num = 0; num < 7; num++){ %>
-                    <li class="list-group-item px-5" id="date-item-<%=num + 1%>">
-                        <%= moment(Date.parse(date) +(num - 2) * 86400000).format("MMM Do YY")%>
+                    <form action="/flights" class="row bootstrapForm dateSearch" method="post">
+                                  <input id="from" type="hidden" name="from" value="<%=fromLocation%>">
+                                  <input  id="to" type="hidden" name="to" value="<%=toLocation%>">
+                                  <input type="hidden" class="form-control" id="date" value="<%= moment(Date.parse(date) +(num - 2) * 86400000).format().split('T')[0]%>" name="date">
+                    <li class="list-group-item date-item" id="date-item-<%=num + 1%>">
+                        <button type="submit" class="btn btn-block btn-light px-4"> <%= moment(Date.parse(date) +(num - 2) * 86400000).format("MMM Do YY")%></button>
                     </li>
+                </form>   
+                
                 <%}%>
             </ul>
         </div>
@@ -32,10 +38,10 @@
                 <td class="card col-12">
                         <h5 class="card-header">
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
                                     <%=moment(results.rows[num].TAKE_OFF_TIME).format("H:mm")%>
                                 </div>
-                                <div class="col-6 justify-content-end text-end"> 
+                                <div class="col-12 col-sm-6 justify-content-end text-sm-end"> 
                                     <%=moment(results.rows[num].ARRIVAL_TIME).format("H:mm")%>
                                 </div>
                             </div>
@@ -44,11 +50,11 @@
                         <div class="card-body">
 
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
                                     
                                     From <%=results.rows[num].FROM_AIRPORT%> To <%=results.rows[num].TO_AIRPORT%> 
                                 </div>
-                                <div class="col-6 justify-content-end text-end"> 
+                                <div class="col-12 col-sm-6 justify-content-end text-sm-end"> 
                                     
                                     <%=results.rows[num].AIRLINE%> <%=results.rows[num].ID_FLIGHT%>
                                 </div>
@@ -64,10 +70,10 @@
                             </div>
                             </div>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
                                     Model <%=results.rows[num].MODEL%>
                                 </div>
-                                <div class="col-6 justify-content-end text-end"> 
+                                <div class="col-12 col-sm-6 justify-content-end text-sm-end"> 
                                 </div>
                             </div>
                         </div>    

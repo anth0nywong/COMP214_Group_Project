@@ -29,15 +29,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CheckFlight = exports.CheckBooking = exports.Checkout = exports.RemoveFromCart = exports.DisplayCheckoutTable = exports.AddToCart = exports.DisplaySelectPage = exports.DisplayFlightsPage = void 0;
 const DBConfig = __importStar(require("../config/db"));
 const oracledb_1 = __importDefault(require("oracledb"));
+oracledb_1.default.initOracleClient({ libDir: 'C:/oracle/instantclient_21_6' });
 let userId = 10;
 function DisplayFlightsPage(req, res, next) {
+    console.log();
     let fromLocation = "", toLocation = "";
     if (req.body.from.includes("(") && req.body.from.includes(")")) {
         fromLocation = req.body.from.split("(")[1].split(")")[0];
     }
+    else
+        fromLocation = req.body.from;
     if (req.body.to.includes("(") && req.body.to.includes(")")) {
         toLocation = req.body.to.split("(")[1].split(")")[0];
     }
+    else
+        toLocation = req.body.to;
     oracledb_1.default.getConnection({
         user: DBConfig.user,
         password: DBConfig.password,
@@ -120,7 +126,8 @@ function DisplayFlightsPage(req, res, next) {
                 result.rows[i].FIRST = minPrice.outBinds.first;
             }
         }
-        res.render('index', { title: 'Search', page: 'flight-search', results: result, date: req.body.date, basket: basket, user: user });
+        console.log(result);
+        res.render('index', { title: 'Search', page: 'flight-search', results: result, date: req.body.date, basket: basket, user: user, fromLocation: fromLocation, toLocation: toLocation });
         await connection.close();
     });
 }
@@ -232,7 +239,7 @@ function DisplayCheckoutTable(req, res, next) {
             });
         }
         const ticket = await connection.execute(`
-      SELECT * FROM pj_customers c ,pj_orders o, pj_ticket t, pj_flight f
+      SELECT cal_tax(o.id_booking) tax_rate, f.airline, t.position,t.id_ticket, f.take_off_time, f.arrival_time, f.from_airport, f.to_airport, t.price FROM pj_customers c ,pj_orders o, pj_ticket t, pj_flight f
       WHERE c.id_user = o.id_user AND o.id_booking = t.orderid AND t.flightid = f.id_flight AND c.id_user = :userNum AND o.completed = 'N'
       `, {
             userNum: userId
@@ -314,15 +321,6 @@ function Checkout(req, res, next) {
             WHERE c.id_user = o.id_user AND o.id_booking = t.orderid AND c.id_user = :userNum AND o.completed = 'N'`, {
             userNum: userId,
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
-        if (basket.rows && basket.rows[0].COUNT == 0) {
-            await connection.execute(`
-        BEGIN
-        create_empty_basket_sp(:userNum);
-        END;
-        `, {
-                userNum: userId,
-            });
-        }
         await connection.close();
         res.render('index', { title: 'Check Out', page: 'complete_order', ticket: ticket, basket: basket, user: user });
     });

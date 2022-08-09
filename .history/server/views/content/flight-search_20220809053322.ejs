@@ -1,0 +1,147 @@
+<div class="container table-responsive">
+    <h1>Flights</h1> 
+    <div class="row justify-content-md-center my-5">
+        <div class="col-12">
+            <% if (results.rows.length > 0){ %>
+            <ul class="list-group list-group-horizontal justify-content-center">
+                <% for (let num = 0; num < 7; num++){ %>
+                    <!-- /// -->
+
+                    <form id="date-item-<%=num + 1%>" action="/flights" class="row bootstrapForm" method="post">
+                        <div class="row">
+                          <div class="col-12 col-lg-10">
+                            <div class ="row">
+                              <div class="col-12 col-md-5 ">
+                                <div class="row">
+                                  <input id="from" type="hidden" name="from" value="<%=results.rows[0].FROM_AIRPORT%>">
+                                </div>
+                              </div>
+                              <div class="col-12 col-md-5">
+                                <div class="row">
+                                  <input  id="to" type="hidden" name="to" value="<%=results.rows[0].TO_AIRPORT%> ">
+                                </div>
+                              </div>
+                            </div>
+                            <div class ="row">
+                              <div class="col-12 col-md-11 ">
+                                <div class="row">
+                                  <input type="hidden" class="form-control" id="date" value="<%= moment(Date.parse(date) +(num - 2) * 86400000).format().split('T')[0]%>" name="date">
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                        
+                        </div>
+                        
+
+                        <!-- /// -->
+                    <li class="list-group-item px-5" >
+                        <%= moment(Date.parse(date) +(num - 2) * 86400000).format("MMM Do YY")%>
+                    </li>
+                </form>
+                <%}%>
+            </ul>
+            <%}%>
+        </div>
+    </div>
+    
+    <div class="row">
+        
+        <table id="searchtList" class="table table-bordered">
+            <thead >
+                <tr>
+                    <th class="text-center" scope="col">Flight</th>
+                    <th class="text-center bg-secondary" scope="col">Economy</th>
+                    <th class="text-center bg-primary" scope="col">Business</th>
+                    <th class="text-center bg-warning" scope="col">Premium</th>
+                </tr>
+            </thead>
+            <% if (results.rows.length > 0){ %>
+            <tbody>
+                <% for (let num = 0; num < 
+                results.rows.length
+                ; num ++) {%>
+                <tr>
+                <td class="card col-12">
+                        <h5 class="card-header">
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    <%=moment(results.rows[num].TAKE_OFF_TIME).format("H:mm")%>
+                                </div>
+                                <div class="col-12 col-sm-6 justify-content-end text-sm-end"> 
+                                    <%=moment(results.rows[num].ARRIVAL_TIME).format("H:mm")%>
+                                </div>
+                            </div>
+                        </h5>
+                        
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    
+                                    From <%=results.rows[num].FROM_AIRPORT%> To <%=results.rows[num].TO_AIRPORT%> 
+                                </div>
+                                <div class="col-12 col-sm-6 justify-content-end text-sm-end"> 
+                                    
+                                    <%=results.rows[num].AIRLINE%> <%=results.rows[num].ID_FLIGHT%>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-2 text-center">
+                                    <i class="fa-solid fa-plane"></i>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-12 text-center">
+                                Duration: <%= Math.floor((results.rows[num].ARRIVAL_TIME - results.rows[num].TAKE_OFF_TIME) / 3600 /1000 )%> : <%= ((results.rows[num].ARRIVAL_TIME - results.rows[num].TAKE_OFF_TIME) /1000 /60 % 60 * 60) < 10?"0":"" %><%= ((results.rows[num].ARRIVAL_TIME - results.rows[num].TAKE_OFF_TIME) /1000 /60 % 60 * 60) %>
+                            </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    Model <%=results.rows[num].MODEL%>
+                                </div>
+                                <div class="col-12 col-sm-6 justify-content-end text-sm-end"> 
+                                </div>
+                            </div>
+                        </div>    
+                </td>
+                <td class="text-center">
+                    <br><span class="deal">Best Deal</span><br> <%=(results.rows[num].ECON)?"US$ " + results.rows[num].ECON.toFixed(2):"Unavailable"%><br><br>
+                    <span> <%=results.rows[num].availabileEcon%> Seats Available</span><br><br>
+                    <a class="btn btn-secondary btn-sm" href="/select/Economy/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a>
+                </td>
+                <td class="text-center">
+                    <br><span class="deal">Best Deal</span><br><%=(results.rows[num].BUSINESS)?"US$ " + results.rows[num].BUSINESS.toFixed(2):"Unavailable"%><br><br>
+                    <span> <%=results.rows[num].availabileBusiness%> Seats Available</span><br><br>
+                    <a class="btn btn-primary btn-sm" href="/select/Business/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a>
+                </td>
+                <td class="text-center">
+                    <br><span class="deal">Best Deal</span><br><%=(results.rows[num].FIRST)?"US$ " + results.rows[num].FIRST.toFixed(2):"Unavailable"%><br><br>
+                    <span> <%=results.rows[num].availabileFirst%> Seats Available</span><br><br>
+                    <a class="btn btn-warning btn-sm" href="/select/First/<%=results.rows[num].ID_FLIGHT%>">Buy Now <i class="fa-solid fa-plane-departure"></i></a>
+                </td>
+                </tr>
+                <%}%>
+                
+            </tbody>
+        </table>
+        <%}
+        else { %>
+            <tbody>
+            <tr>
+            <td class="text-center">No result is found.
+                <div class="col-12 justify-content-end text-center"> <br><br>
+                <a href="/home" class="btn btn-primary btn-sm" id="button">Return</a>
+            </div></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            </tr>
+            </tbody>
+            <br><br><br>
+            
+            
+            <%}%>
+    </div>
+       
+</div>
