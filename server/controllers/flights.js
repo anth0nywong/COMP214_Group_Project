@@ -55,8 +55,7 @@ function DisplayFlightsPage(req, res, next) {
         else {
             console.log("Succesfully Login Oracle Database with user" + DBConfig.user);
         }
-        const result = await connection.execute(`
-          SELECT * FROM pj_flight
+        const result = await connection.execute(`SELECT * FROM pj_flight
           WHERE TO_CHAR(take_off_time, 'YYYY-MM-DD') = :day AND FROM_AIRPORT = :dep AND TO_AIRPORT = :arr`, {
             day: req.body.date,
             dep: fromLocation,
@@ -72,8 +71,7 @@ function DisplayFlightsPage(req, res, next) {
             userNum: userId,
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
         if (basket.rows && basket.rows[0].COUNT == 0) {
-            await connection.execute(`
-              BEGIN
+            await connection.execute(`BEGIN
               create_empty_basket_sp(:userNum);
               END;
               `, {
@@ -82,8 +80,7 @@ function DisplayFlightsPage(req, res, next) {
         }
         if (result.rows) {
             for (let i = 0; i < result.rows.length; i++) {
-                const minPrice = await connection.execute(`
-              BEGIN
+                const minPrice = await connection.execute(`BEGIN
               min_price_sp(:flightid, :econ, :business, :first);
               END;`, {
                     flightid: result.rows[i].ID_FLIGHT,

@@ -2,8 +2,8 @@ import express from 'express';
 import * as DBConfig from '../config/db';
 import oracledb from 'oracledb';
 
-oracledb.initOracleClient({ libDir: 'C:/oracle/instantclient_21_6' }); //<-- uncomment this line if using window
-let userId = 10;
+oracledb.initOracleClient({ libDir: 'C:/oracle/instantclient_21_6' }); 
+let userId = 10; //predefined user;
 
 export function DisplayFlightsPage(req: express.Request, res: express.Response, next: express.NextFunction)
 {
@@ -36,15 +36,15 @@ export function DisplayFlightsPage(req: express.Request, res: express.Response, 
             console.log("Succesfully Login Oracle Database with user" +  DBConfig.user);
           }
           // select airport information
-          const result:oracledb.Result<any> = await connection.execute(`
-          SELECT * FROM pj_flight
+          const result:oracledb.Result<any> = await connection.execute( //oracle db function(query, parameters, output format config)
+            `SELECT * FROM pj_flight
           WHERE TO_CHAR(take_off_time, 'YYYY-MM-DD') = :day AND FROM_AIRPORT = :dep AND TO_AIRPORT = :arr`, 
           {
-            day: req.body.date,
+            day: req.body.date, //variables from forms of web front end
             dep: fromLocation,
             arr: toLocation
           },
-          { outFormat: oracledb.OUT_FORMAT_OBJECT });
+          { outFormat: oracledb.OUT_FORMAT_OBJECT }); //output as an object
           // User information
           const user = await connection.execute(`
           SELECT * FROM PJ_CUSTOMERS WHERE id_user = :userNum`, 
@@ -63,8 +63,8 @@ export function DisplayFlightsPage(req: express.Request, res: express.Response, 
             // Create basket if no basket found
             if(basket.rows && basket.rows[0].COUNT == 0)
             {
-              await connection.execute(`
-              BEGIN
+              await connection.execute( //create basket procedure
+                `BEGIN
               create_empty_basket_sp(:userNum);
               END;
               `,
@@ -76,8 +76,8 @@ export function DisplayFlightsPage(req: express.Request, res: express.Response, 
             {
               for (let i = 0; i < result.rows.length; i ++)
               {
-              const minPrice :oracledb.Result<any> = await connection.execute(`
-              BEGIN
+              const minPrice :oracledb.Result<any> = await connection.execute( //minimum price procedure with OUT parameters
+                `BEGIN
               min_price_sp(:flightid, :econ, :business, :first);
               END;`,
                 {
@@ -135,7 +135,7 @@ export function DisplayFlightsPage(req: express.Request, res: express.Response, 
             }
           }
           console.log(result);
-            res.render('index', {title: 'Search', page: 'flight-search', results: result, date: req.body.date, basket: basket, user: user, fromLocation: fromLocation, toLocation:toLocation });
+            res.render('index', {title: 'Search', page: 'flight-search', results: result, date: req.body.date, basket: basket, user: user, fromLocation: fromLocation, toLocation:toLocation});
           await connection.close();
         
       }
