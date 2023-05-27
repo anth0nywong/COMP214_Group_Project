@@ -31,7 +31,6 @@ const DBConfig = __importStar(require("../config/db"));
 const oracledb_1 = __importDefault(require("oracledb"));
 let userId = 10;
 function DisplayFlightsPage(req, res, next) {
-    console.log();
     let fromLocation = "", toLocation = "";
     if (req.body.from.includes("(") && req.body.from.includes(")")) {
         fromLocation = req.body.from.split("(")[1].split(")")[0];
@@ -46,7 +45,7 @@ function DisplayFlightsPage(req, res, next) {
     oracledb_1.default.getConnection({
         user: DBConfig.user,
         password: DBConfig.password,
-        connectString: DBConfig.connectString
+        connectString: DBConfig.connectString,
     }, async (err, connection) => {
         if (err) {
             console.log(err);
@@ -58,7 +57,7 @@ function DisplayFlightsPage(req, res, next) {
           WHERE TO_CHAR(take_off_time, 'YYYY-MM-DD') = :day AND FROM_AIRPORT = :dep AND TO_AIRPORT = :arr`, {
             day: req.body.date,
             dep: fromLocation,
-            arr: toLocation
+            arr: toLocation,
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
         const user = await connection.execute(`
           SELECT * FROM PJ_CUSTOMERS WHERE id_user = :userNum`, {
@@ -85,19 +84,19 @@ function DisplayFlightsPage(req, res, next) {
                     flightid: result.rows[i].ID_FLIGHT,
                     econ: { dir: oracledb_1.default.BIND_OUT, type: oracledb_1.default.NUMBER },
                     business: { dir: oracledb_1.default.BIND_OUT, type: oracledb_1.default.NUMBER },
-                    first: { dir: oracledb_1.default.BIND_OUT, type: oracledb_1.default.NUMBER }
+                    first: { dir: oracledb_1.default.BIND_OUT, type: oracledb_1.default.NUMBER },
                 });
                 const econ = await connection.execute(`
               SELECT COUNT(s.id_ticket) NUM FROM TABLE (check_seat(:flightid)) s , pj_ticket p where s.id_ticket = p.id_ticket AND p.class = 'Economy'`, {
-                    flightid: result.rows[i].ID_FLIGHT
+                    flightid: result.rows[i].ID_FLIGHT,
                 }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
                 const business = await connection.execute(`
               SELECT COUNT(s.id_ticket) NUM FROM TABLE (check_seat(:flightid)) s , pj_ticket p where s.id_ticket = p.id_ticket AND p.class = 'Business'`, {
-                    flightid: result.rows[i].ID_FLIGHT
+                    flightid: result.rows[i].ID_FLIGHT,
                 }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
                 const first = await connection.execute(`
               SELECT COUNT(s.id_ticket) NUM FROM TABLE (check_seat(:flightid)) s , pj_ticket p where s.id_ticket = p.id_ticket AND p.class = 'First'`, {
-                    flightid: result.rows[i].ID_FLIGHT
+                    flightid: result.rows[i].ID_FLIGHT,
                 }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
                 if (econ.rows) {
                     result.rows[i].availabileEcon = econ.rows[0].NUM;
@@ -123,7 +122,16 @@ function DisplayFlightsPage(req, res, next) {
             }
         }
         console.log(result);
-        res.render('index', { title: 'Search', page: 'flight-search', results: result, date: req.body.date, basket: basket, user: user, fromLocation: fromLocation, toLocation: toLocation });
+        res.render("index", {
+            title: "Search",
+            page: "flight-search",
+            results: result,
+            date: req.body.date,
+            basket: basket,
+            user: user,
+            fromLocation: fromLocation,
+            toLocation: toLocation,
+        });
         await connection.close();
     });
 }
@@ -132,7 +140,7 @@ function DisplaySelectPage(req, res, next) {
     oracledb_1.default.getConnection({
         user: DBConfig.user,
         password: DBConfig.password,
-        connectString: DBConfig.connectString
+        connectString: DBConfig.connectString,
     }, async (err, connection) => {
         if (err) {
             console.log(err);
@@ -143,13 +151,13 @@ function DisplaySelectPage(req, res, next) {
         const flight = await connection.execute(`
       SELECT TO_CHAR(take_off_time, 'YYYY-MM-DD') takeoffdate, airline, id_flight, model FROM pj_flight
       WHERE  id_flight =  :flightid`, {
-            flightid: req.params.flightId
+            flightid: req.params.flightId,
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
         const ticket = await connection.execute(`
       SELECT * FROM pj_ticket
       WHERE availability = 'Y' AND class = :class AND flightid = :flightid AND orderid IS NULL`, {
             flightid: req.params.flightId,
-            class: req.params.class
+            class: req.params.class,
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
         const user = await connection.execute(`
           SELECT * FROM PJ_CUSTOMERS WHERE id_user = :userNum`, {
@@ -161,7 +169,15 @@ function DisplaySelectPage(req, res, next) {
             userNum: userId,
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
         await connection.close();
-        res.render('index', { title: 'Select Ticket', flight: flight, page: 'select', ticket: ticket, basket: basket, user: user, flight_id: req.params.flightId });
+        res.render("index", {
+            title: "Select Ticket",
+            flight: flight,
+            page: "select",
+            ticket: ticket,
+            basket: basket,
+            user: user,
+            flight_id: req.params.flightId,
+        });
     });
 }
 exports.DisplaySelectPage = DisplaySelectPage;
@@ -169,7 +185,7 @@ function AddToCart(req, res, next) {
     oracledb_1.default.getConnection({
         user: DBConfig.user,
         password: DBConfig.password,
-        connectString: DBConfig.connectString
+        connectString: DBConfig.connectString,
     }, async (err, connection) => {
         if (err) {
             console.log(err);
@@ -197,10 +213,10 @@ function AddToCart(req, res, next) {
             END;
             `, {
             userNum: userId,
-            ticketNum: req.params.ticketId
+            ticketNum: req.params.ticketId,
         });
         await connection.close();
-        res.redirect('back');
+        res.redirect("back");
     });
 }
 exports.AddToCart = AddToCart;
@@ -208,7 +224,7 @@ function DisplayCheckoutTable(req, res, next) {
     oracledb_1.default.getConnection({
         user: DBConfig.user,
         password: DBConfig.password,
-        connectString: DBConfig.connectString
+        connectString: DBConfig.connectString,
     }, async (err, connection) => {
         if (err) {
             console.log(err);
@@ -238,10 +254,16 @@ function DisplayCheckoutTable(req, res, next) {
       SELECT cal_tax(o.id_booking) tax_rate, f.airline, t.position,t.id_ticket, f.take_off_time, f.arrival_time, f.from_airport, f.to_airport, t.price FROM pj_customers c ,pj_orders o, pj_ticket t, pj_flight f
       WHERE c.id_user = o.id_user AND o.id_booking = t.orderid AND t.flightid = f.id_flight AND c.id_user = :userNum AND o.completed = 'N'
       `, {
-            userNum: userId
+            userNum: userId,
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
         await connection.close();
-        res.render('index', { title: 'Check Out', page: 'checkout', ticket: ticket, basket: basket, user: user });
+        res.render("index", {
+            title: "Check Out",
+            page: "checkout",
+            ticket: ticket,
+            basket: basket,
+            user: user,
+        });
     });
 }
 exports.DisplayCheckoutTable = DisplayCheckoutTable;
@@ -249,7 +271,7 @@ function RemoveFromCart(req, res, next) {
     oracledb_1.default.getConnection({
         user: DBConfig.user,
         password: DBConfig.password,
-        connectString: DBConfig.connectString
+        connectString: DBConfig.connectString,
     }, async (err, connection) => {
         if (err) {
             console.log(err);
@@ -277,10 +299,10 @@ function RemoveFromCart(req, res, next) {
             END;
             `, {
             userNum: userId,
-            ticketNum: req.params.ticketId
+            ticketNum: req.params.ticketId,
         });
         await connection.close();
-        res.redirect('back');
+        res.redirect("back");
     });
 }
 exports.RemoveFromCart = RemoveFromCart;
@@ -288,7 +310,7 @@ function Checkout(req, res, next) {
     oracledb_1.default.getConnection({
         user: DBConfig.user,
         password: DBConfig.password,
-        connectString: DBConfig.connectString
+        connectString: DBConfig.connectString,
     }, async (err, connection) => {
         if (err) {
             console.log(err);
@@ -300,7 +322,7 @@ function Checkout(req, res, next) {
         SELECT * FROM pj_customers c ,pj_orders o, pj_ticket t, pj_flight f
         WHERE c.id_user = o.id_user AND o.id_booking = t.orderid AND t.flightid = f.id_flight AND c.id_user = :userNum AND o.completed = 'N'
         `, {
-            userNum: userId
+            userNum: userId,
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
         await connection.execute(`
         BEGIN
@@ -318,7 +340,13 @@ function Checkout(req, res, next) {
             userNum: userId,
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
         await connection.close();
-        res.render('index', { title: 'Check Out', page: 'complete_order', ticket: ticket, basket: basket, user: user });
+        res.render("index", {
+            title: "Check Out",
+            page: "complete_order",
+            ticket: ticket,
+            basket: basket,
+            user: user,
+        });
     });
 }
 exports.Checkout = Checkout;
@@ -326,7 +354,7 @@ function CheckBooking(req, res, next) {
     oracledb_1.default.getConnection({
         user: DBConfig.user,
         password: DBConfig.password,
-        connectString: DBConfig.connectString
+        connectString: DBConfig.connectString,
     }, async (err, connection) => {
         if (err) {
             console.log(err);
@@ -343,7 +371,7 @@ function CheckBooking(req, res, next) {
         AND LOWER(c.last_name)  = :lastName AND o.id_booking = :idBooking
         `, {
             lastName: req.body.lastName.toLowerCase(),
-            idBooking: req.body.idBooking
+            idBooking: req.body.idBooking,
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
         const user = await connection.execute(`
           SELECT * FROM PJ_CUSTOMERS WHERE id_user = :userNum`, {
@@ -364,7 +392,13 @@ function CheckBooking(req, res, next) {
             });
         }
         await connection.close();
-        res.render('index', { title: 'Check Out', page: 'booking', ticket: ticket, basket: basket, user: user });
+        res.render("index", {
+            title: "Check Out",
+            page: "booking",
+            ticket: ticket,
+            basket: basket,
+            user: user,
+        });
     });
 }
 exports.CheckBooking = CheckBooking;
@@ -372,7 +406,7 @@ function CheckFlight(req, res, next) {
     oracledb_1.default.getConnection({
         user: DBConfig.user,
         password: DBConfig.password,
-        connectString: DBConfig.connectString
+        connectString: DBConfig.connectString,
     }, async (err, connection) => {
         if (err) {
             console.log(err);
@@ -384,7 +418,7 @@ function CheckFlight(req, res, next) {
         const result = await connection.execute(`
           SELECT * FROM pj_flight where id_flight = :flightid AND airline = :airline`, {
             flightid: req.body.flightid,
-            airline: req.body.airline
+            airline: req.body.airline,
         }, { outFormat: oracledb_1.default.OUT_FORMAT_OBJECT });
         console.log(result);
         const user = await connection.execute(`
@@ -405,7 +439,13 @@ function CheckFlight(req, res, next) {
                 userNum: userId,
             });
         }
-        res.render('index', { title: 'Search', page: 'flight-info', results: result, basket: basket, user: user });
+        res.render("index", {
+            title: "Search",
+            page: "flight-info",
+            results: result,
+            basket: basket,
+            user: user,
+        });
         await connection.close();
     });
 }
