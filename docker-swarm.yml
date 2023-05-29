@@ -1,9 +1,10 @@
 version: "3.8"
 services:
-  be:
+  airline-demo:
     image: anth0nywong/214_airline
     ports:
       - "3300:3000"
+    env_file: ./.env
     deploy:
       replicas: 2
       resources:
