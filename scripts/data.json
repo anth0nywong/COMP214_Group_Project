@@ -1,0 +1,20 @@
+{
+  "Airport": {
+    "YYZ": { "Toronto Pearson Airport": "Toronto", "Airline": "AC" },
+    "LAX": {
+      "Los Angeles International Airport": "Los Angeles",
+      "Airline": "UA"
+    },
+    "JFK": {
+      "John F. Kennedy International Airport": "New York",
+      "Airline": "UA"
+    },
+    "HKG": { "Hong Kong International Airport": "Hong Kong" },
+    "NRT": { "Narita International Airport": "Tokyo", "Airline": "ANA" }
+  },
+  "Airline": {
+    "AC": "Air Canada",
+    "UA": "United Airlines",
+    "ANA": "All Nippon Airways"
+  }
+}

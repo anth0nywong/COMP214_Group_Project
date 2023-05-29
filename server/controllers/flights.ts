@@ -2,7 +2,7 @@ import express from "express";
 import * as DBConfig from "../config/db";
 import oracledb from "oracledb";
 
-//oracledb.initOracleClient({ libDir: "D:/oracle/instantclient_21_6" }); //<-- uncomment this line if using window
+oracledb.initOracleClient({ libDir: "D:/oracle/instantclient_21_6" }); //<-- uncomment this line if using window
 let userId = 10; //predefined user;
 
 export function DisplayFlightsPage(

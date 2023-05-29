@@ -1,49 +1,63 @@
 <div class="container seat-container">
-    
-    <h1><%= title %></h1><br>
-    <div class="container-fluid ml-5">
-        <% if(flight.rows.length > 0) { %><h3><%=flight.rows[0].AIRLINE%> <%=flight_id%> - Model <%=flight.rows[0].MODEL%></h3><% } %>
-        <% if(ticket.rows.length > 0) { %><h3><%=ticket.rows[0].CLASS%>  Class</h3><%} else { %> <h3> No availabile tickets </h3> <% } %>
-        <div class="row ">
-            <div class="col text-center bg-image" >
-                <div class="col filter-off">
-                &nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D<br>
-                <% for (let i = 0; i < 25; i++)
-                {   %>
-                    <span class="py-0 my-0 text-end"><%=(i + 1 < 10)?"0": ""%><%=i + 1%></span> <%
-                    for (let j = 0; j < 5; j++)
-                    {
-                        let check = -1;
-                        let row;
-                        let column;
-                        for(let k = 0; k < ticket.rows.length; k++) {
-                            column = ticket.rows[k].POSITION.substring(0, 1).charCodeAt(0) - 65;
-                            row  = ticket.rows[k].POSITION.substring(1) - 1;
-                            if (row==i && column == j) {check = k;} 
-                        }
-                        if( j == 2) { %> <span>&nbsp;&nbsp;&nbsp;</span> <% }
-                        else { if(check == -1){ %> <button style="border-radius: 0 !important;" class="btn btn-lg btn-secondary" disabled> </button><%} else{ %> 
-                            <button style="border-radius: 0 !important;" class="btn btn-lg btn-primary" data-bs-toggle="tooltip" data-bs-html="true" data-bs-delay='100'
-                            title="
+  <h1><%= title %></h1>
+  <br />
+  <div class="container-fluid ml-5">
+    <% if(flight.rows.length > 0) { %>
+    <h3>
+      <%=flight.rows[0].AIRLINE%> <%=flight_id%> - Model
+      <%=flight.rows[0].MODEL%>
+    </h3>
+    <% } %> <% if(ticket.rows.length > 0) { %>
+    <h3><%=ticket.rows[0].CLASS%> Class</h3>
+    <%} else { %>
+    <h3>No availabile tickets</h3>
+    <% } %>
+    <div class="row">
+      <div class="col text-center bg-image">
+        <div class="col filter-off">
+          &nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D<br />
+          <% for (let i = 0; i < 25; i++) { %>
+          <span class="py-0 my-0 text-end"
+            ><%=(i + 1 < 10)?"0": ""%><%=i + 1%></span
+          >
+          <% for (let j = 0; j < 5; j++) { let check = -1; let row; let column;
+          for(let k = 0; k < ticket.rows.length; k++) { column =
+          ticket.rows[k].POSITION.substring(0, 1).charCodeAt(0) - 65; row =
+          ticket.rows[k].POSITION.substring(1) - 1; if (row==i && column == j)
+          {check = k;} } if( j == 2) { %> <span>&nbsp;&nbsp;&nbsp;</span> <% }
+          else { if(check == -1){ %>
+          <button
+            style="border-radius: 0 !important"
+            class="btn btn-lg btn-secondary"
+            disabled
+          ></button
+          ><%} else{ %>
+          <button
+            style="border-radius: 0 !important"
+            class="btn btn-lg btn-primary"
+            data-bs-toggle="tooltip"
+            data-bs-html="true"
+            data-bs-delay="100"
+            title="
                             <div class='row'>
                             <div class='col-12 '>Seat: <%=ticket.rows[check].POSITION%></div>
-                            <div class='col-12 '>Price: $<%=ticket.rows[check].PRICE%></div>
+                            <div class='col-12 '>Price: $<%=ticket.rows[check].PRICE.toFixed(2)%></div>
                             <div class='col-12 '><a class='btn btn-primary btn-sm' style='font-size: 5px;' href='/book/<%=ticket.rows[check].ID_TICKET%>'>Confirm</a></div>
                             </div>
-                            ">
-                            </button><% }}
-                }
-                    %> <br> <%
-                } %>
-                </div>
-            </div> 
-        </div>  
+                            "
+          ></button
+          ><% }} } %> <br />
+          <% } %>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 <script>
-var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl)
-})
-
+  var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
 </script>

@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  be:
+    image: anth0nywong/214_airline
+    ports:
+      - "3300:3000"
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "0.20"
+          memory: 200M
+        reservations:
+          cpus: "0.10"
+          memory: 100M
+    networks:
+      - 214_airline
+networks:
+  214_airline:

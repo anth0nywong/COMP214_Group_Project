@@ -105,3 +105,6 @@ dist
 
 # VS code history
 .history
+
+# Zip files
+.zip
